@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Button, Col, Dropdown, DropdownButton, Row, Spinner } from 'react-bootstrap';
-import SingleCard from './SingleCard/SingleCard';
+import SingleCard from '../SingleCard/SingleCard';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faFilter } from '@fortawesome/free-solid-svg-icons';
 
@@ -16,7 +16,7 @@ const CardList = () => {
       setIsLoading(true)
       fetch('https://pokeapi.co/api/v2/pokemon/' + (page ? page.split('/pokemon/')[1] : ''))
          .then((responseAllPokemons) => responseAllPokemons.json())
-         .then((dataAllPokemons) => (setResponseAll(dataAllPokemons), setResults(r => r.concat(dataAllPokemons.results))))
+         .then((allPokemonsData) => (setResponseAll(allPokemonsData), setResults(r => r.concat(allPokemonsData.results))))
          .then(() => /* setTimeout(() => { */setIsLoading(false)/* }, 1000) */)
    }, [page])
 
@@ -32,13 +32,11 @@ const CardList = () => {
    }) */
 
 
-
-
    return (
       <React.Fragment>
          <Row className='justify-content-between'>
             <Col xs={8}>
-               <h1 className='text-uppercase my-3'>All pokémons</h1>
+               <h1 className='text-uppercase mb-4'>All pokémons</h1>
             </Col>
             <Col xs={4} className='d-flex align-items-center justify-content-end'>
                <Dropdown>
@@ -55,7 +53,7 @@ const CardList = () => {
          </Row>
          <Row>
             {(results.map((pokemon, i) => <SingleCard key={pokemon.url} pokemonId={pokemon.url.split('pokemon/')[1].substr(0, pokemon.url.split('pokemon/')[1].length - 1)} pokemonName={pokemon.name}></SingleCard>))}
-            <div className='text-center'>
+            <div className='text-center mb-5'>
                <Button variant='primary' disabled={isLoading} onClick={() => setPage(responseAll['next'])}>
                   {isLoading ? (
                      <Spinner

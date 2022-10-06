@@ -5,7 +5,7 @@ import Logo from '../Logo/Logo'
 
 const Footer = () => {
    return (
-      <div id='footer'>
+      <div id='footer' className='position-fixed w-100'>
          <Container className='d-flex justify-content-between align-items-center'>
             <Link to="/">
                <Logo />

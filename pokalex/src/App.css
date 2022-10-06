@@ -1,7 +1,9 @@
-#navbar {
+#header {
     background-color: white;
     box-shadow: 0px 2px 14px rgb(161, 161, 161);
     max-height: 80px;
+    top: 0px;
+    z-index: 99;
 }
 
 .navbar-footer-logo {
@@ -21,5 +23,43 @@
 #footer {
     background-color: #353535;
     box-shadow: 0px -2px 14px rgb(161, 161, 161);
-    height: 80px;
+    max-height: 80px;
+    bottom: 0px;
+    z-index: 99;
+}
+
+#full-page-spinner {
+    height: 82vh;
+}
+
+button {
+    font-size: 16px!important;
+}
+
+button,
+.type-badge {
+    border-radius: 14px!important;
+}
+
+.type-badge,
+.type-badge0,
+.type-badge1 {
+    width: 125px;
+}
+
+.type-badge0 {
+    border-radius: 14px 0 0 14px!important;
+    border-right: 1px solid white;
+}
+
+.type-badge1 {
+    border-radius: 0 14px 14px 0!important;
+}
+
+#catch-or-release-button {
+    width: 250px;
+}
+
+#height-weight-row {
+    width: 250px;
 }
