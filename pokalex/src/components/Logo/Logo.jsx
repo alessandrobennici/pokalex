@@ -1,9 +1,9 @@
 import React from 'react'
-import LogoImg from '../../assets/img/Pokemon-Logo.png'
+import pokemonLogo from '../../assets/img/Pokemon-Logo.png'
 
 const Logo = () => {
   return (
-    <img id="navbar-logo" alt="pokemon-logo" src={LogoImg}/>
+    <img className="navbar-footer-logo" alt="pokemon-logo" src={pokemonLogo}/>
   )
 }
 
