@@ -60,6 +60,7 @@ button,
     width: 250px;
 }
 
-#height-weight-row {
+#pokemon-details-height-and-weight {
     width: 250px;
+    box-sizing: content-box;
 }

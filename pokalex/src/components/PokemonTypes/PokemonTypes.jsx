@@ -5,20 +5,12 @@ import { MyContext, useStateValue } from '../../App';
 const PokemonTypes = ({ pokemonData }) => {
 
    const [pokemonTypes, setPokemonTypes] = useState(useStateValue('MyContext'));
-   console.log(pokemonTypes)
-
-
-   /* useEffect(() => {
-      fetch('https://pokeapi.co/api/v2/pokemon/' + pokemonName)
-         .then((responseSinglePokemon) => responseSinglePokemon.json())
-         .then((dataSinglePokemon) => (setPokemonTypes(dataSinglePokemon)))
-   }, []) */
 
 
    const pickVariant = (pokemonType) => {
 
       let variant = '';
-      
+
       switch (pokemonType) {
          case 'normal':
          case 'unknown':
@@ -36,11 +28,11 @@ const PokemonTypes = ({ pokemonData }) => {
             variant = 'primary';
             break;
          case 'ground':
+         case 'bug':
          case 'grass':
             variant = 'success';
             break;
          case 'rock':
-         case 'bug':
          case 'electric':
          case 'fairy':
             variant = 'warning';
@@ -66,7 +58,7 @@ const PokemonTypes = ({ pokemonData }) => {
 
    return (
       pokemonData.types.map((pokemonType, i) => (
-         <Badge key={i} bg={pickVariant(pokemonType.type.name)} className={`type-badge${moreThanOnePokemon ? i : ''} badge bg-primary d-inline-block py-3`}>{pokemonType.type.name}</Badge>
+         <Badge key={i} bg={pickVariant(pokemonType.type.name)} className={`type-badge${moreThanOnePokemon ? i : ''} badge bg-primary d-inline-block py-2 text-uppercase`}>{pokemonType.type.name}</Badge>
       ))
    )
 }

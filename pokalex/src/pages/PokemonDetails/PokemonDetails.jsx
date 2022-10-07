@@ -1,20 +1,28 @@
 import React, { useEffect, useState } from 'react';
 import { Col, Container, Row, Spinner } from 'react-bootstrap';
-import { useParams } from "react-router-dom";
+import { useLocation, useParams } from "react-router-dom";
 import { prominent } from 'color.js'
 import BackButton from '../../components/BackButton/BackButton';
 import HeroPokemonDetails from './HeroPokemonDetails/HeroPokemonDetails';
 import PokeballIcon from '../../components/PokeballIcon/PokeballIcon';
 import PokemonTypes from '../../components/PokemonTypes/PokemonTypes';
+import Abilities from './Abilities/Abilities';
 
 const PokemonDetails = () => {
+
+  const location = useLocation();
+  const categoryFilter = location.state.categoryFilter;
+
+  console.log('pokemonDetails', categoryFilter)
 
   const { pokemonName } = useParams();
   const [isLoading, setIsLoading] = useState(true);
   const [pokemonData, setPokemonData] = useState({});
+  const [pokemonAbilities, setPokemonAbilities] = useState([]);
   const [titleColor, setTitleColor] = useState(null);
+  const [error, setError] = useState(null);
+  const [isCaught, setIsCaught] = useState(JSON.parse(localStorage.getItem('caughtPokemons')).includes(pokemonName) ? 1 : 0)
 
-  let isCaught = JSON.parse(localStorage.getItem('caughtPokemons')).includes(pokemonName) ? 1 : 0
 
   useEffect(() => {
     setIsLoading(true)
@@ -24,16 +32,47 @@ const PokemonDetails = () => {
         setPokemonData(responsePokemonData);
         let pokemonImgSrc = 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/' + responsePokemonData.id + '.png';
         prominent(pokemonImgSrc, { amount: 3, format: 'hex' }).then((data) => setTitleColor(data[2]))
-          .then(() => /* setTimeout(() => {  */setIsLoading(false)/*  }, 1000) */)
+        responsePokemonData.abilities.map((pokemonDataAbility, i) =>
+          fetch(pokemonDataAbility.ability.url)
+            .then((responseAbility) => responseAbility.json())
+            .then((dataResponseAbility) => {
+
+              setPokemonAbilities(prevState => [...prevState, {
+                'name': dataResponseAbility['name'],
+                'effect': dataResponseAbility.effect_entries.find(x => x.language.name === 'en').effect,
+                'short_effect': dataResponseAbility.effect_entries.find(x => x.language.name === 'en').short_effect,
+              }])
+            })
+            .catch(() => {
+              setIsLoading(false)
+              setError('There was an error with your request, please try again later.')
+            })
+        )
       })
+      .catch(() => {
+        setIsLoading(false)
+        setError('There was an error with your request, please try again later.')
+      })
+      .then(() => /* setTimeout(() => {  */setIsLoading(false)/*  }, 1000) */)
   }, [])
 
-  console.log('dataaaa', pokemonData)
+  console.log('DETAILS data', pokemonData)
+
+  if (error) {
+    return (
+      <Row>
+        <Col>
+          <BackButton categoryFilter={categoryFilter}></BackButton>
+          <div className='text-center h1 text-danger py-5 my-5'>{error}</div>
+        </Col>
+      </Row>
+    )
+  }
 
   if (isLoading) {
     return (
       <React.Fragment>
-        <BackButton></BackButton>
+        <BackButton categoryFilter={categoryFilter}></BackButton>
         <div id="full-page-spinner" className='d-flex justify-content-center align-items-center'>
           <Spinner animation="border" variant="primary"></Spinner>
         </div>
@@ -44,14 +83,13 @@ const PokemonDetails = () => {
   return (
     <React.Fragment>
       <Row className='align-items-center mb-5'>
-        <Col xs={3} lg={2}><BackButton></BackButton></Col>
+        <Col xs={3} lg={2}><BackButton categoryFilter={categoryFilter}></BackButton></Col>
         <Col xs={6} lg={8}><p className='d-flex justify-content-center align-items-center fw-bold h1 text-capitalize mb-0' style={{ color: titleColor ?? 'inherit' }}>{pokemonName}</p></Col>
         <Col xs={3} lg={2}><PokeballIcon isCaught={isCaught}></PokeballIcon></Col>
       </Row>
 
-      <Row>
-        <HeroPokemonDetails pokemonData={pokemonData} isCaught={isCaught}></HeroPokemonDetails>
-      </Row>
+      <HeroPokemonDetails pokemonData={pokemonData} isCaught={isCaught} setIsCaught={setIsCaught}></HeroPokemonDetails>
+      <Abilities pokemonAbilities={pokemonAbilities}></Abilities>
     </React.Fragment>
   )
 }

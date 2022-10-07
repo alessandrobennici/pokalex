@@ -4,13 +4,12 @@ import React from 'react';
 import { Button } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
 
-const BackButton = () => {
+const BackButton = ({ categoryFilter }) => {
 
    const navigate = useNavigate();
-   const goBack = () => navigate('/');
-
+   console.log('back category filter', categoryFilter)
    return (
-      <Button variant='primary' onClick={() => goBack('/')}>
+      <Button variant='primary' onClick={() => navigate('/', { state: { categoryFilter: categoryFilter } })}>
          <FontAwesomeIcon icon={faArrowLeft} /> <span className='d-none d-md-inline'>Back</span>
       </Button>
    )

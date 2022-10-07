@@ -24,13 +24,9 @@ function App() {
       .then(setIsLoading(false))
   }, [])
 
-  let caughtPokemons = ['bulbasaur', 'charmander']
+  let caughtPokemons = JSON.parse(localStorage.caughtPokemons) || ['bulbasaur', 'charmander']
 
   localStorage.setItem('caughtPokemons', JSON.stringify(caughtPokemons))
-
-  /* let test = JSON.parse(localStorage.getItem('caughtPokemons'))
-  test.push('ivysaur')
-  localStorage.setItem('caughtPokemons', JSON.stringify(test)) */
 
   if (isLoading) {
     return (
@@ -47,7 +43,7 @@ function App() {
     <React.Fragment>
       <Header></Header>
       <MyContext.Provider value={pokemonTypes.results}>
-        <Container className='mb-5'>
+        <Container className='mb-5 pb-4'>
           <Routes>
             <Route path="/" exact element={<Home />} />
             <Route path="/:pokemonName" element={<PokemonDetails />} />

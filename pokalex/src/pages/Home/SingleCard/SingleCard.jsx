@@ -3,13 +3,16 @@ import { useEffect } from 'react';
 import { Button, Card, Col, Row } from 'react-bootstrap';
 import $ from 'jquery';
 import { LazyLoadImage } from "react-lazy-load-image-component";
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import PokeballIcon from '../../../components/PokeballIcon/PokeballIcon';
 
 
-const SingleCard = ({ pokemonName, pokemonId }) => {
+const SingleCard = ({ pokemonName, pokemonId, categoryFilter }) => {
+
+  console.log('singleCard category', categoryFilter)
 
   const [singlePokemonData, setSinglePokemonData] = useState();
+  const navigate = useNavigate();
 
   useEffect(() => {
     fetch('https://pokeapi.co/api/v2/pokemon/' + pokemonName)
@@ -53,7 +56,7 @@ const SingleCard = ({ pokemonName, pokemonId }) => {
             </Card.Text>
           </Col>
           <Col xs={12} className='mt-3'>
-            <Link to={`/${pokemonName}`}><Button className='w-100' variant='primary'>Details</Button></Link>
+            <Button className='w-100' variant='primary' onClick={() => navigate('/' + pokemonName, { state: { categoryFilter: categoryFilter } })}>Details</Button>
           </Col>
         </Row>
 
