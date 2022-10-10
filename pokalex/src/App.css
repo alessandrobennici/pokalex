@@ -1,7 +1,6 @@
 #header {
     background-color: white;
     box-shadow: 0px 2px 14px rgb(161, 161, 161);
-    max-height: 80px;
     top: 0px;
     z-index: 99;
 }
@@ -14,9 +13,9 @@
     font-family: 'Lexend', Arial, Helvetica, sans-serif;
 }
 
-.singleCardBody p,
-.singleCardBody a,
-.singleCardBody button {
+.single-card-body p,
+.single-card-body a,
+.single-card-body button {
     font-size: 14px;
 }
 
@@ -30,13 +29,30 @@
 
 #full-page-spinner {
     height: 82vh;
+    height: 100vh;
+    top: 0;
+    left: 0;
+    z-index: 98;
+}
+
+#card-list {
+    z-index: 97;
 }
 
 button {
     font-size: 16px!important;
 }
 
-button,
+button {
+    border-radius: 14px!important;
+}
+
+.type-badge-singlecard {
+    width: unset!important;
+    font-size: 8px!important;
+}
+
+.type-badge.type-badge-singlecard,
 .type-badge {
     border-radius: 14px!important;
 }
@@ -63,4 +79,14 @@ button,
 #pokemon-details-height-and-weight {
     width: 250px;
     box-sizing: content-box;
+}
+
+#search-pokemon-input {
+    width: 100%;
+}
+
+@media screen and (min-width: 576px) {
+    #search-pokemon-input {
+        width: 300px;
+    }
 }

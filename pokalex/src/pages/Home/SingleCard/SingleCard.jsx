@@ -3,28 +3,28 @@ import { useEffect } from 'react';
 import { Button, Card, Col, Row } from 'react-bootstrap';
 import $ from 'jquery';
 import { LazyLoadImage } from "react-lazy-load-image-component";
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import PokeballIcon from '../../../components/PokeballIcon/PokeballIcon';
+import PokemonTypes from '../../../components/PokemonTypes/PokemonTypes';
 
 
-const SingleCard = ({ pokemonName, pokemonId, categoryFilter }) => {
-
-  console.log('singleCard category', categoryFilter)
+const SingleCard = ({ pokemonName, pokemonId, categoryFilter, setIsLoading, lastCard, mainData }) => {
 
   const [singlePokemonData, setSinglePokemonData] = useState();
   const navigate = useNavigate();
 
   useEffect(() => {
-    fetch('https://pokeapi.co/api/v2/pokemon/' + pokemonName)
-      .then((responseSinglePokemon) => responseSinglePokemon.json())
-      .then((dataSinglePokemon) => (setSinglePokemonData(dataSinglePokemon)))
-
     $('img[data-src]').each((i, img) => {
       img.setAttribute('src', img.getAttribute('data-src'));
       img.onload = function () {
         img.removeAttribute('data-src');
       };
     })
+    
+    fetch('https://pokeapi.co/api/v2/pokemon/' + pokemonName)
+      .then((responseSinglePokemon) => responseSinglePokemon.json())
+      .then((dataSinglePokemon) => (setSinglePokemonData(dataSinglePokemon)))
+      .then(() => lastCard ? setIsLoading(false) : null)
   }, [pokemonName, pokemonId])
 
   let pokemonImgSrc = 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/' + pokemonId + '.png';
@@ -32,22 +32,15 @@ const SingleCard = ({ pokemonName, pokemonId, categoryFilter }) => {
 
 
   return (
-    <Card className='col-12 col-sm-6 col-lg-3 justify-content-center align-items-center mb-5' border='0'>
+    <Card className='col-12 col-sm-6 col-xl-3 justify-content-center align-items-center mb-5' border='0'>
       <LazyLoadImage src={pokemonImgSrc} width={200} height={200} alt={pokemonName + ' picture'}></LazyLoadImage>
-      <Card.Body className='singleCardBody w-100 p-0'>
+      <Card.Body className='single-card-body w-100 p-0'>
         <Row className='justify-content-between align-items-start p-0 m-0'>
           <Card.Title className='text-capitalize' style={{ 'fontWeight': 'bold' }}>
             {pokemonName}
             <PokeballIcon isCaught={isCaught}></PokeballIcon>
           </Card.Title>
-          <Col xs={5}>
-            {singlePokemonData ? (singlePokemonData.types.map((pokemonType, i) => (
-              <Card.Text key={pokemonName + pokemonType.type.name} className='mb-0 text-capitalize'>
-                {pokemonType.type.name}
-              </Card.Text>
-            ))) : null}
-          </Col>
-          <Col xs={7} className='text-end'>
+          <Col xs={6}>
             <Card.Text className='mb-0'>
               Height: {singlePokemonData ? singlePokemonData.height : null}
             </Card.Text>
@@ -55,8 +48,11 @@ const SingleCard = ({ pokemonName, pokemonId, categoryFilter }) => {
               Weight: {singlePokemonData ? singlePokemonData.weight : null}
             </Card.Text>
           </Col>
+          <Col xs={6} className='text-end'>
+            <PokemonTypes pokemonData={singlePokemonData} renderInSingleCard={true}></PokemonTypes>
+          </Col>
           <Col xs={12} className='mt-3'>
-            <Button className='w-100' variant='primary' onClick={() => navigate('/' + pokemonName, { state: { categoryFilter: categoryFilter } })}>Details</Button>
+            <Button className='w-100' variant='primary' onClick={() => navigate('/' + pokemonName, { state: { categoryFilter: categoryFilter, mainData: mainData } })}>Details</Button>
           </Col>
         </Row>
 

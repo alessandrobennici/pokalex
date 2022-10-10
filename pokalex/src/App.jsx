@@ -8,48 +8,36 @@ import { Container, Spinner } from 'react-bootstrap';
 import Footer from './components/Footer/Footer';
 import Header from './components/Header/Header';
 
-export const MyContext = React.createContext();
-export const useStateValue = () => useContext(MyContext);
+export const RefreshedPageContext = React.createContext({
+  refreshedOrFirstAccess: true,
+  setRefreshedOrFirstAccess: () => { }
+});
+
+export const SearchContext = React.createContext();
 
 function App() {
 
-  const [isLoading, setIsLoading] = useState(false);
-  const [pokemonTypes, setPokemonTypes] = useState({});
+  const [refreshedOrFirstAccess, setRefreshedOrFirstAccess] = useState(true);
+  const refreshedPage = { refreshedOrFirstAccess, setRefreshedOrFirstAccess };
+  const [searchInput, setSearchInput] = useState('');
 
-  useEffect(() => {
-    setIsLoading(true)
-    fetch('https://pokeapi.co/api/v2/type')
-      .then((responsePokemonTypes) => responsePokemonTypes.json())
-      .then((dataPokemonTypes) => (setPokemonTypes(dataPokemonTypes)))
-      .then(setIsLoading(false))
-  }, [])
-
-  let caughtPokemons = JSON.parse(localStorage.caughtPokemons) || ['bulbasaur', 'charmander']
+  let caughtPokemons = JSON.parse(localStorage.getItem('caughtPokemons')) || ['bulbasaur', 'charmander']
 
   localStorage.setItem('caughtPokemons', JSON.stringify(caughtPokemons))
 
-  if (isLoading) {
-    return (
-      <React.Fragment>
-        <div id="full-page-spinner" className='d-flex justify-content-center align-items-center'>
-          <Spinner animation="border" variant="primary"></Spinner>
-        </div>
-      </React.Fragment>
-    )
-  }
-
-
   return (
     <React.Fragment>
+      <SearchContext.Provider value={{searchInput, setSearchInput}}>
       <Header></Header>
-      <MyContext.Provider value={pokemonTypes.results}>
+      <RefreshedPageContext.Provider value={refreshedPage}>
         <Container className='mb-5 pb-4'>
           <Routes>
             <Route path="/" exact element={<Home />} />
             <Route path="/:pokemonName" element={<PokemonDetails />} />
           </Routes>
         </Container>
-      </MyContext.Provider>
+      </RefreshedPageContext.Provider>
+      </SearchContext.Provider>
       <Footer></Footer>
     </React.Fragment >
   );

@@ -1,11 +1,7 @@
-import React, { useEffect, useState } from 'react'
+import React from 'react'
 import { Badge } from 'react-bootstrap';
-import { MyContext, useStateValue } from '../../App';
 
-const PokemonTypes = ({ pokemonData }) => {
-
-   const [pokemonTypes, setPokemonTypes] = useState(useStateValue('MyContext'));
-
+const PokemonTypes = ({ pokemonData, renderInSingleCard }) => {
 
    const pickVariant = (pokemonType) => {
 
@@ -54,12 +50,12 @@ const PokemonTypes = ({ pokemonData }) => {
       return variant
    }
 
-   let moreThanOnePokemon = pokemonData.types.length > 1;
+   let moreThanOneType = pokemonData ? pokemonData.types.length > 1 : false;
 
    return (
-      pokemonData.types.map((pokemonType, i) => (
-         <Badge key={i} bg={pickVariant(pokemonType.type.name)} className={`type-badge${moreThanOnePokemon ? i : ''} badge bg-primary d-inline-block py-2 text-uppercase`}>{pokemonType.type.name}</Badge>
-      ))
+      pokemonData ? pokemonData.types.map((pokemonType, i) => (
+         <Badge key={i} bg={pickVariant(pokemonType.type.name)} className={`type-badge${moreThanOneType ? i : ''} ${renderInSingleCard ? 'type-badge-singlecard' : ''} badge bg-primary d-inline-block py-2 text-uppercase`}>{pokemonType.type.name}</Badge>
+      )) : null
    )
 }
 

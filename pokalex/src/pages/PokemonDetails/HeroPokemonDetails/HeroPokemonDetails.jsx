@@ -16,7 +16,6 @@ const HeroPokemonDetails = ({ pokemonData, isCaught, setIsCaught }) => {
       setIsLoading(true);
       if (Math.random() < 0.5) {
          setTimeout(() => {
-            console.log('si');
             let caughtPokemonsArray = JSON.parse(localStorage.getItem('caughtPokemons'))
             caughtPokemonsArray.push(pokemonData.name)
             localStorage.setItem('caughtPokemons', JSON.stringify(caughtPokemonsArray))
@@ -26,7 +25,6 @@ const HeroPokemonDetails = ({ pokemonData, isCaught, setIsCaught }) => {
          }, 2000)
       } else {
          setTimeout(() => {
-            console.log('no');
             setTriedToCatch(true);
             setIsLoading(false)
          }, 2000)
@@ -35,7 +33,6 @@ const HeroPokemonDetails = ({ pokemonData, isCaught, setIsCaught }) => {
    }
 
    const releasePokemon = () => {
-      console.log('release')
       setIsCaught(0)
       setTriedToCatch(false);
       let caughtPokemonsArray = JSON.parse(localStorage.getItem('caughtPokemons'))
