@@ -100,9 +100,9 @@ const CardList = () => {
                         <FontAwesomeIcon icon={faFilter} /> Filters
                      </Dropdown.Toggle>
                      <Dropdown.Menu>
-                        <Dropdown.Item onClick={() => setCategoryFilter('all')}>All</Dropdown.Item>
-                        <Dropdown.Item onClick={() => setCategoryFilter('caught')}>Caught</Dropdown.Item>
-                        <Dropdown.Item onClick={() => setCategoryFilter('uncaught')}>Uncaught</Dropdown.Item>
+                        <Dropdown.Item onClick={() => setCategoryFilter('all')}>All ({responseAll.count})</Dropdown.Item>
+                        <Dropdown.Item onClick={() => setCategoryFilter('caught')}>Caught ({caughtPokemons.length})</Dropdown.Item>
+                        <Dropdown.Item onClick={() => setCategoryFilter('uncaught')}>Uncaught ({responseAll.count - caughtPokemons.length})</Dropdown.Item>
                      </Dropdown.Menu>
                   </Dropdown>
                </Col>
