@@ -51,7 +51,7 @@ const HeroPokemonDetails = ({ pokemonData, isCaught, setIsCaught }) => {
                <Col xs={12} xxl={6} className='mb-3 mb-xxl-0'>
                   <PokemonTypes pokemonData={pokemonData}></PokemonTypes>
                </Col>
-               <Col xs={12} xxl={6} className='d-flex justify-content-between flex-row flex-' id='pokemon-details-height-and-weight'>
+               <Col xs={12} xxl={6} className='d-flex justify-content-between flex-row' id='pokemon-details-height-and-weight'>
                   <p className='mb-0'>Height: {pokemonData.height}</p>
                   <p className='mb-0'>Weight: {pokemonData.weight}</p>
                </Col>
@@ -67,9 +67,9 @@ const HeroPokemonDetails = ({ pokemonData, isCaught, setIsCaught }) => {
                ) : null} {isCaught ? 'Release' : triedToCatch ? 'Try to catch again' : 'Try to catch'}</Button>
             {triedToCatch ? (
                isCaught ? (
-                  <p className='mb-0 text-center text-success' style={{ width: 250 }}><span className='text-capitalize'>{pokemonData.name}</span> caught, congratulations!</p>
+                  <p className={'mb-0 text-center text-success' + (isLoading ? ' d-none' : '')} style={{ width: 250 }}><span className='text-capitalize'>{pokemonData.name}</span> caught, congratulations!</p>
                ) : (
-                  <p className='mb-0 text-center text-danger' style={{ width: 250 }}><span className='text-capitalize'>{pokemonData.name}</span> escaped!</p>
+                  <p className={'mb-0 text-center text-danger' + (isLoading ? ' d-none' : '')} style={{ width: 250 }}><span className='text-capitalize'>{pokemonData.name}</span> escaped!</p>
                )
             ) : null}
          </Col>

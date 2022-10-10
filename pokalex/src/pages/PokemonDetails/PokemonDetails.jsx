@@ -7,6 +7,7 @@ import HeroPokemonDetails from './HeroPokemonDetails/HeroPokemonDetails';
 import PokeballIcon from '../../components/PokeballIcon/PokeballIcon';
 import Abilities from './Abilities/Abilities';
 import { RefreshedPageContext } from '../../App';
+import GenericError from '../../components/GenericError/GenericError';
 
 const PokemonDetails = () => {
 
@@ -14,8 +15,6 @@ const PokemonDetails = () => {
 
 
   const location = useLocation();
-  console.log('DETAILS - location.state', location.state)
-  console.log('DETAILS - refreshedOrFirstAccess', refreshedOrFirstAccess)
   const categoryFilter = location.state && !refreshedOrFirstAccess ? location.state.categoryFilter : 'all';
 
   console.log('pokemonDetails - categoryFilter', categoryFilter)
@@ -65,19 +64,14 @@ const PokemonDetails = () => {
 
   if (error) {
     return (
-      <Row>
-        <Col>
-          <BackButton categoryFilter={categoryFilter} mainData={location.state ? location.state.mainData : {}}></BackButton>
-          <div className='text-center h1 text-danger py-5 my-5'>{error}</div>
-        </Col>
-      </Row>
+      <GenericError error={error}></GenericError>
     )
   }
 
   if (isLoading) {
     return (
       <React.Fragment>
-        <BackButton categoryFilter={categoryFilter} mainData={location.state ? location.state.mainData : {}}></BackButton>
+        <BackButton categoryFilter={categoryFilter} mainData={location.state ? location.state.mainData : { responseAll: {}, filteredResults: [], sliceNumbers: [] }}></BackButton>
         <div id="full-page-spinner" className='d-flex justify-content-center align-items-center'>
           <Spinner animation="border" variant="primary"></Spinner>
         </div>
@@ -88,7 +82,7 @@ const PokemonDetails = () => {
   return (
     <React.Fragment>
       <Row className='align-items-center mb-5'>
-        <Col xs={3} lg={2}><BackButton categoryFilter={categoryFilter} mainData={location.state ? location.state.mainData : {}}></BackButton></Col>
+        <Col xs={3} lg={2}><BackButton categoryFilter={categoryFilter} mainData={location.state ? location.state.mainData : { responseAll: {}, filteredResults: [], sliceNumbers: [] }}></BackButton></Col>
         <Col xs={6} lg={8}><p className='d-flex justify-content-center align-items-center fw-bold h1 text-capitalize mb-0' style={{ color: titleColor ?? 'inherit' }}>{pokemonName}</p></Col>
         <Col xs={3} lg={2}><PokeballIcon isCaught={isCaught}></PokeballIcon></Col>
       </Row>

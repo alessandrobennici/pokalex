@@ -16,7 +16,7 @@ const BackButton = ({ categoryFilter, mainData }) => {
    const navigate = useNavigate();
    console.log('back categoryFilter', categoryFilter)
    return (
-      <Button variant='outline-primary' onClick={() => { setRefreshedOrFirstAccess(false); navigate('/', { state: { categoryFilter: categoryFilter, mainData: mainData } }) }}>
+      <Button variant='outline-primary' onClick={() => {navigate('/', { state: { categoryFilter: categoryFilter, mainData: mainData } }) }}>
          <FontAwesomeIcon icon={faArrowLeft} /> <span className='d-none d-md-inline'>Home</span>
       </Button>
    )

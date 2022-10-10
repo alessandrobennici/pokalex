@@ -6,12 +6,16 @@ import { LazyLoadImage } from "react-lazy-load-image-component";
 import { useNavigate } from 'react-router-dom';
 import PokeballIcon from '../../../components/PokeballIcon/PokeballIcon';
 import PokemonTypes from '../../../components/PokemonTypes/PokemonTypes';
+import GenericError from '../../../components/GenericError/GenericError';
+
 
 
 const SingleCard = ({ pokemonName, pokemonId, categoryFilter, setIsLoading, lastCard, mainData }) => {
 
   const [singlePokemonData, setSinglePokemonData] = useState();
   const navigate = useNavigate();
+  const [error, setError] = useState(null);
+
 
   useEffect(() => {
     $('img[data-src]').each((i, img) => {
@@ -20,16 +24,25 @@ const SingleCard = ({ pokemonName, pokemonId, categoryFilter, setIsLoading, last
         img.removeAttribute('data-src');
       };
     })
-    
+
     fetch('https://pokeapi.co/api/v2/pokemon/' + pokemonName)
       .then((responseSinglePokemon) => responseSinglePokemon.json())
       .then((dataSinglePokemon) => (setSinglePokemonData(dataSinglePokemon)))
       .then(() => lastCard ? setIsLoading(false) : null)
+      .catch(() => {
+        setIsLoading(false)
+        setError('There was an error with your request, please try again later.')
+      })
   }, [pokemonName, pokemonId])
 
   let pokemonImgSrc = 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/' + pokemonId + '.png';
   let isCaught = JSON.parse(localStorage.getItem('caughtPokemons')).includes(pokemonName) ? 1 : 0
 
+  if (error) {
+    return (
+      <GenericError error={error}></GenericError>
+    )
+  }
 
   return (
     <Card className='col-12 col-sm-6 col-xl-3 justify-content-center align-items-center mb-5' border='0'>
