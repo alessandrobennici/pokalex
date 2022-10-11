@@ -3,8 +3,6 @@ import { Col, Row } from 'react-bootstrap'
 
 const Abilities = ({ pokemonAbilities }) => {
 
-   console.log('bbbb', pokemonAbilities)
-
    return (
 
       <React.Fragment>
@@ -19,7 +17,7 @@ const Abilities = ({ pokemonAbilities }) => {
                   <p className='h4 mb-4 mb-md-0 text-capitalize fw-bold'>{i + 1}. {ability.name}</p>
                </Col>
 
-               <Col xs={12} lg={6} className='pe-5 mb-2 mb-md-0'>
+               <Col xs={12} lg={6} className='pe-5 mb-4 mb-md-0'>
                   <p className='mb-2 fw-bold'>Effect</p>
                   <p className='mb-0 fw-light'>{ability.effect}</p>
                </Col>

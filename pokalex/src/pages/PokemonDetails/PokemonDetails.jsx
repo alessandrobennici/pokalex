@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { Col, Container, Row, Spinner } from 'react-bootstrap';
+import { Col, Row, Spinner } from 'react-bootstrap';
 import { useLocation, useParams } from "react-router-dom";
 import { prominent } from 'color.js'
 import BackButton from '../../components/BackButton/BackButton';
@@ -11,13 +11,11 @@ import GenericError from '../../components/GenericError/GenericError';
 
 const PokemonDetails = () => {
 
-  const { refreshedOrFirstAccess, setRefreshedOrFirstAccess } = useContext(RefreshedPageContext);
+  const { refreshedOrFirstAccess } = useContext(RefreshedPageContext);
 
 
   const location = useLocation();
   const categoryFilter = location.state && !refreshedOrFirstAccess ? location.state.categoryFilter : 'all';
-
-  console.log('pokemonDetails - categoryFilter', categoryFilter)
 
   const { pokemonName } = useParams();
   const [isLoading, setIsLoading] = useState(true);
@@ -33,9 +31,9 @@ const PokemonDetails = () => {
     fetch('https://pokeapi.co/api/v2/pokemon/' + pokemonName)
       .then((responsePokemon) => responsePokemon.json())
       .then((responsePokemonData) => {
-        setPokemonData(responsePokemonData);
         let pokemonImgSrc = 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/' + responsePokemonData.id + '.png';
         prominent(pokemonImgSrc, { amount: 3, format: 'hex' }).then((data) => setTitleColor(data[2]))
+        setPokemonData(responsePokemonData);
         responsePokemonData.abilities.map((pokemonDataAbility, i) =>
           fetch(pokemonDataAbility.ability.url)
             .then((responseAbility) => responseAbility.json())
@@ -53,14 +51,14 @@ const PokemonDetails = () => {
             })
         )
       })
+      .then(() => /* setTimeout(() => {  */setIsLoading(false)/*  }, 1000) */)
       .catch(() => {
         setIsLoading(false)
         setError('There was an error with your request, please try again later.')
       })
-      .then(() => /* setTimeout(() => {  */setIsLoading(false)/*  }, 1000) */)
+
   }, [])
 
-  console.log('DETAILS data', pokemonData)
 
   if (error) {
     return (
@@ -83,7 +81,7 @@ const PokemonDetails = () => {
     <React.Fragment>
       <Row className='align-items-center mb-5'>
         <Col xs={3} lg={2}><BackButton categoryFilter={categoryFilter} mainData={location.state ? location.state.mainData : { responseAll: {}, filteredResults: [], sliceNumbers: [] }}></BackButton></Col>
-        <Col xs={6} lg={8}><p className='d-flex justify-content-center align-items-center fw-bold h1 text-capitalize mb-0' style={{ color: titleColor ?? 'inherit' }}>{pokemonName}</p></Col>
+        <Col xs={6} lg={8}><p className='d-flex justify-content-center align-items-center fw-bold h1 text-capitalize mb-0' style={{ color: titleColor ?? '' }}>{pokemonName}</p></Col>
         <Col xs={3} lg={2}><PokeballIcon isCaught={isCaught}></PokeballIcon></Col>
       </Row>
 

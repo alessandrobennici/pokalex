@@ -4,7 +4,7 @@ import { Badge } from 'react-bootstrap';
 const PokemonTypes = ({ pokemonData, renderInSingleCard }) => {
 
    const pickVariant = (pokemonType) => {
-
+      
       let variant = '';
 
       switch (pokemonType) {

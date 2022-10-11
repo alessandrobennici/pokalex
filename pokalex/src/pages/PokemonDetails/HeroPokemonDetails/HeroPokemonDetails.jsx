@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Button, Col, Row, Spinner } from 'react-bootstrap'
+import { Button, Col, Row } from 'react-bootstrap'
 import { LazyLoadImage } from 'react-lazy-load-image-component'
 import PokemonTypes from '../../../components/PokemonTypes/PokemonTypes'
 import StatsSection from './Stats/Stats'
@@ -8,7 +8,6 @@ import PokeballRollingIcon from '../../../assets/img/pokeball-rolling.gif'
 const HeroPokemonDetails = ({ pokemonData, isCaught, setIsCaught }) => {
 
    const [isLoading, setIsLoading] = useState(false);
-
    const [triedToCatch, setTriedToCatch] = useState(false);
 
 
@@ -47,11 +46,11 @@ const HeroPokemonDetails = ({ pokemonData, isCaught, setIsCaught }) => {
    return (
       <Row className='mb-5'>
          <Col xs={{ span: 12, order: 'last' }} md={{ span: 6, order: 'first' }} className='text-center text-md-start d-flex flex-column justify-content-center align-items-center align-items-md-start'>
-            <Row className='flex-column flex-md-row justify-content-between w-100 align-items-center mb-5'>
-               <Col xs={12} xxl={6} className='mb-3 mb-xxl-0'>
+            <Row className='flex-column flex-md-row justify-content-between w-100 align-items-center mb-5 mx-0'>
+               <Col xs={12} xxl={6} className='mb-3 mb-xxl-0 ps-xxl-0'>
                   <PokemonTypes pokemonData={pokemonData}></PokemonTypes>
                </Col>
-               <Col xs={12} xxl={6} className='d-flex justify-content-between flex-row' id='pokemon-details-height-and-weight'>
+               <Col xs={12} xxl={6} className='d-flex justify-content-between flex-row pe-xxl-0' id='pokemon-details-height-and-weight'>
                   <p className='mb-0'>Height: {pokemonData.height}</p>
                   <p className='mb-0'>Weight: {pokemonData.weight}</p>
                </Col>
@@ -60,10 +59,10 @@ const HeroPokemonDetails = ({ pokemonData, isCaught, setIsCaught }) => {
          </Col>
          <Col xs={12} md={6} className='text-center text-md-start d-flex flex-column align-items-center align-items-md-end mb-5 mb-md-0'>
             <LazyLoadImage src={pokemonImgSrc} width={250} height={250} alt={pokemonData.name + ' picture'}></LazyLoadImage>
-            <Button variant={isCaught ? 'success' : 'danger'} id='catch-or-release-button' onClick={isCaught ? () => releasePokemon() : () => tryToCatch()} disabled={isLoading}>
+            <Button className='mb-2' variant={isCaught ? 'success' : 'danger'} id='catch-or-release-button' onClick={isCaught ? () => releasePokemon() : () => tryToCatch()} disabled={isLoading}>
                {isLoading ? (
 
-                  <img width={20} height={20} style={{ verticalAlign: 'text-top' }} src={PokeballRollingIcon} />
+                  <img width={20} height={20} style={{ verticalAlign: 'text-top' }} alt='pokeball icon' src={PokeballRollingIcon} />
                ) : null} {isCaught ? 'Release' : triedToCatch ? 'Try to catch again' : 'Try to catch'}</Button>
             {triedToCatch ? (
                isCaught ? (

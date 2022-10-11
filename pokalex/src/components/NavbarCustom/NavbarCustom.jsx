@@ -1,17 +1,18 @@
 import React, { useContext, useEffect, useState } from 'react'
-import { Link, useLocation } from 'react-router-dom'
-import { Container, FormControl, InputGroup, Navbar, Offcanvas } from 'react-bootstrap'
+import { useLocation } from 'react-router-dom'
+import { Container, FormControl, InputGroup, Navbar } from 'react-bootstrap'
 import { faSearch } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-
-import Logo from '../Logo/Logo'
 import { SearchContext } from '../../App'
+import Logo from '../Logo/Logo'
+import $ from 'jquery'
+
 
 
 const NavbarCustom = () => {
 
    const [hideSearch, setHideSearch] = useState(true)
-   const { searchInput, setSearchInput } = useContext(SearchContext);
+   const { setSearchInput } = useContext(SearchContext);
    const currentLocation = useLocation();
 
    useEffect(() => {
@@ -19,6 +20,7 @@ const NavbarCustom = () => {
          setHideSearch(false)
       } else {
          setHideSearch(true)
+         $('#search-pokemon-input > input').val('')
       }
    })
 
@@ -35,7 +37,7 @@ const NavbarCustom = () => {
             <Navbar.Toggle aria-controls="basic-navbar-nav" className={hideSearch ? 'd-none' : ''} />
             <Navbar.Collapse id="basic-navbar-nav" className={`justify-content-end ${hideSearch ? 'd-none' : ''}`}>
                <InputGroup id='search-pokemon-input' onChange={searchInputChange} className={hideSearch ? 'd-none' : ''}>
-                  <InputGroup.Text id="basic-addon1" className={hideSearch ? 'd-none' : ''}><FontAwesomeIcon icon={faSearch} /></InputGroup.Text>
+                  <InputGroup.Text id="basic-addon1"><FontAwesomeIcon icon={faSearch} /></InputGroup.Text>
                   <FormControl
                      placeholder="Search pokemon..."
                      aria-label="Search pokemon..."

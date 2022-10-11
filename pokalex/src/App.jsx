@@ -2,9 +2,9 @@
 import './App.css';
 import { Routes, Route } from 'react-router-dom';
 import Home from './pages/Home/Home';
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import PokemonDetails from './pages/PokemonDetails/PokemonDetails';
-import { Container, Spinner } from 'react-bootstrap';
+import { Container } from 'react-bootstrap';
 import Footer from './components/Footer/Footer';
 import Header from './components/Header/Header';
 
@@ -21,7 +21,7 @@ function App() {
   const refreshedPage = { refreshedOrFirstAccess, setRefreshedOrFirstAccess };
   const [searchInput, setSearchInput] = useState('');
 
-  let caughtPokemons = JSON.parse(localStorage.getItem('caughtPokemons')) || ['bulbasaur', 'charmander']
+  let caughtPokemons = JSON.parse(localStorage.getItem('caughtPokemons')) || ['bulbasaur', 'squirtle', 'charmander']
 
   localStorage.setItem('caughtPokemons', JSON.stringify(caughtPokemons))
 

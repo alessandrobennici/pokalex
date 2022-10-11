@@ -6,7 +6,7 @@ import BackButton from '../BackButton/BackButton'
 
 const GenericError = ({ error }) => {
 
-   const { refreshedOrFirstAccess, setRefreshedOrFirstAccess } = useContext(RefreshedPageContext);
+   const { refreshedOrFirstAccess } = useContext(RefreshedPageContext);
 
 
    const location = useLocation();

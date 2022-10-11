@@ -5,8 +5,8 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faFilter } from '@fortawesome/free-solid-svg-icons';
 import { useLocation } from 'react-router-dom';
 import { RefreshedPageContext, SearchContext } from '../../../App';
-import $ from 'jquery';
 import GenericError from '../../../components/GenericError/GenericError';
+import $ from 'jquery'
 
 const CardList = () => {
 
@@ -21,6 +21,8 @@ const CardList = () => {
    const [filteredResults, setFilteredResults] = useState(location.state && !refreshedOrFirstAccess ? location.state.mainData.filteredResults : []);
    const [categoryFilter, setCategoryFilter] = useState(location.state && !refreshedOrFirstAccess ? location.state.categoryFilter : 'all')
    const [sliceNumbers, setSliceNumbers] = useState(location.state && !refreshedOrFirstAccess ? location.state.mainData.sliceNumbers : [0, 20])
+   const [buttonHidden, setButtonHidden] = useState(false)
+   const [searchResults, setSearchResults] = useState('initial')
    const [error, setError] = useState(null);
 
 
@@ -29,8 +31,12 @@ const CardList = () => {
    }
 
    useEffect(() => {
+      setSearchResults(responseAll.results.filter((pokemon, i) => pokemon.name.toLowerCase().startsWith(searchInput)).length)
+   })
+
+   useEffect(() => {
       filterPokemons(categoryFilter)
-   }, [categoryFilter])
+   }, [categoryFilter, searchResults])
 
    useEffect(() => {
       setFilteredResults((prevState) => prevState.concat(responseAll.results.slice(sliceNumbers[0], location.state && !refreshedOrFirstAccess ? 0 : sliceNumbers[1])))
@@ -43,11 +49,9 @@ const CardList = () => {
 
 
    useEffect(() => {
+      setSearchInput('')
       if (refreshedOrFirstAccess) {
          setIsLoadingButton(true)
-
-         console.log('SONO NELLA CHIAMATA SBAGLIATA 2')
-
          fetch('https://pokeapi.co/api/v2/pokemon?limit=1500&offset=0')
             .then((responseAllPokemons) => responseAllPokemons.json())
             .then((allPokemonsData) => (setResponseAll(allPokemonsData), setFilteredResults(allPokemonsData.results.slice(sliceNumbers[0], sliceNumbers[1]))))
@@ -66,23 +70,20 @@ const CardList = () => {
       switch (category) {
          case 'all':
             setFilteredResults(responseAll.results.slice(0, sliceNumbers[1]))
+            setButtonHidden(false)
             break;
          case 'caught':
             setFilteredResults(responseAll.results.filter(pokemon => caughtPokemons.includes(pokemon.name)).slice(0, sliceNumbers[1]));
+            setButtonHidden(responseAll.results.filter(pokemon => caughtPokemons.includes(pokemon.name)).slice(0, sliceNumbers[1]).length === caughtPokemons.length)
             break;
          case 'uncaught':
             setFilteredResults(responseAll.results.filter(pokemon => !caughtPokemons.includes(pokemon.name)).slice(0, sliceNumbers[1]));
+            setButtonHidden(false)
             break;
          default:
             break;
       }
    }
-
-
-
-   console.log('CARDLIST data', responseAll ? responseAll : null)
-   console.log('CARDLIST defaultResults', responseAll ? responseAll.results : null)
-   console.log('CARDLIST filteredResults', filteredResults)
 
    if (error) {
       return (
@@ -100,27 +101,24 @@ const CardList = () => {
          <div id='card-list'>
             <Row className='justify-content-between align-items-center'>
                <Col xs={8}>
-                  <h1 className='text-uppercase'>All pokémons</h1>
+                  <h1 className='fw-bold'>Pokalex</h1>
                </Col>
                <Col xs={4} className='d-flex align-items-center justify-content-end'>
                   <Dropdown>
-                     <Dropdown.Toggle variant='outline-primary'>
-                        <FontAwesomeIcon icon={faFilter} /> Filters
+                     <Dropdown.Toggle variant='outline-primary' disabled={searchInput !== ''}>
+                        <FontAwesomeIcon icon={faFilter}/> Filters
                      </Dropdown.Toggle>
                      <Dropdown.Menu>
-                        <Dropdown.Item onClick={() => setCategoryFilter('all')} active={categoryFilter === 'all'}>All ({responseAll ? responseAll.count : 0})</Dropdown.Item>
-                        <Dropdown.Item onClick={() => setCategoryFilter('caught')} active={categoryFilter === 'caught'}>Caught ({caughtPokemons.length})</Dropdown.Item>
-                        <Dropdown.Item onClick={() => setCategoryFilter('uncaught')} active={categoryFilter === 'uncaught'}>Uncaught ({responseAll ? responseAll.count - caughtPokemons.length : 0})</Dropdown.Item>
+                        <Dropdown.Item onClick={() => { setCategoryFilter('all') }} active={categoryFilter === 'all'}>All ({responseAll ? responseAll.count : 0})</Dropdown.Item>
+                        <Dropdown.Item onClick={() => { setCategoryFilter('caught') }} active={categoryFilter === 'caught'}>Caught ({caughtPokemons.length})</Dropdown.Item>
+                        <Dropdown.Item onClick={() => { setCategoryFilter('uncaught') }} active={categoryFilter === 'uncaught'}>Uncaught ({responseAll ? responseAll.count - caughtPokemons.length : 0})</Dropdown.Item>
                      </Dropdown.Menu>
                   </Dropdown>
                </Col>
             </Row>
             <Row>
-               {((searchInput === '' ? filteredResults : responseAll.results).map((pokemon, i) => pokemon.name.toLowerCase().includes(searchInput) ? <SingleCard key={i} pokemonId={pokemon.url.split('pokemon/')[1].substr(0, pokemon.url.split('pokemon/')[1].length - 1)} pokemonName={pokemon.name} categoryFilter={categoryFilter} setIsLoading={setIsLoading} lastCard={i === filteredResults.length - 1 ? true : false} mainData={{ responseAll: responseAll, filteredResults: filteredResults, sliceNumbers: sliceNumbers }}></SingleCard> : null))}
-
-               {/* {$('.single-card-body').length === 0 ? <p>No results</p> : null} */}
-
-               <div className='text-center mb-5'>
+               {searchResults !== 0 ? ((searchInput === '' ? filteredResults : responseAll.results).map((pokemon, i) => pokemon.name.toLowerCase().startsWith(searchInput) ? <SingleCard key={i} pokemonId={pokemon.url.split('pokemon/')[1].substr(0, pokemon.url.split('pokemon/')[1].length - 1)} pokemonName={pokemon.name} categoryFilter={categoryFilter} setIsLoading={setIsLoading} lastCard={i === filteredResults.length - 1 ? true : false} mainData={{ responseAll: responseAll, filteredResults: filteredResults, sliceNumbers: sliceNumbers }}></SingleCard> : null)) : <h2 className='text-center py-4 text-danger'>No Pokémons found</h2>}
+               {!buttonHidden && searchResults !== 0 && searchInput === '' ? <div className='text-center mb-5'>
                   <Button variant='primary' disabled={isLoadingButton} onClick={() => showMore()}>
                      {isLoadingButton ? (
                         <Spinner
@@ -132,7 +130,8 @@ const CardList = () => {
                         />
                      ) : null} Show more
                   </Button>
-               </div>
+               </div> : null}
+
             </Row>
          </div>
       </React.Fragment >
