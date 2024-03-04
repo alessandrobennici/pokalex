@@ -37,4 +37,4 @@ Oh, and so you wanna try the Pokalex on your PC? Sure, it's super easy, just mak
 # Note
 The API used for this project are the PokéApi.<br>
 This project uses React as front-end framework.<br>
-This prokect took about 1 week of free time to build.<br>
+This project took about 1 week of free time to build.<br>
